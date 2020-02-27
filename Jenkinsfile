@@ -6,7 +6,9 @@ pipeline {
         stage('Setup') {
             steps {
                 sh('rpmdev-setuptree')
-                sh('test -d ~/rpmbuild/SOURCES || echo 404')
+                sh('cp hello.spec /home/jenkins/rpmbuild/SPECS')
+                sh('cd /home/jenkins/rpmbuild/SPECS')
+                sh(''rpmbuild -ba hello.spec)
             }
         }
 
