@@ -1,16 +1,29 @@
+#!/bin/groovy
 pipeline {
     agent {
         dockerfile true
     }
+
     stages {
-        stage('Setup') {
+        stage('Init') {
             steps {
                 sh('rpmdev-setuptree')
-                sh('cp hello.spec /home/jenkins/rpmbuild/SPECS')
-                sh('cd /home/jenkins/rpmbuild/SPECS')
-                sh('rpmbuild -ba hello.spec')
+                sh('cd ~/rpmbuild/SOURCES; wget -c http://ftp.gnu.org/gnu/hello/hello-2.10.tar.gz')
+                sh('cd ~/rpmbuild/SPECS; rpmdev-newspec hello')
             }
         }
-
+        stage('Build') {
+            steps {
+                sh('cp hello.spec ~/rpmbuild/SPECS')
+                sh('cd ~/rpmbuild/SPECS; rpmbuild -ba hello.spec')
+                sh('cp /home/user/rpmbuild/RPMS/*/*.rpm .')
+            }
+        }
+        stage('Deploy') {
+            steps {
+                archiveArtifacts(artifacts: '*.rpm')
+            }
+        }
     }
 }
+
