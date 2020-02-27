@@ -21,7 +21,7 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                archiveArtifacts(artifacts: '*.rpm')
+                archiveArtifacts(artifacts: '*.rpm', fingerprint: true)
             }
         }
     }
