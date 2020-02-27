@@ -1,52 +1,15 @@
-#
-# spec file for package hello
-#
-# Copyright (c) 2020 SUSE LINUX GmbH, Nuernberg, Germany.
-#
-# All modifications and additions to the file contributed by third parties
-# remain the property of their copyright owners, unless otherwise agreed
-# upon. The license for this file, and modifications and additions to the
-# file, is the same license as for the pristine package itself (unless the
-# license for the pristine package is not an Open Source License, in which
-# case the license is the MIT License). An "Open Source License" is a
-# license that conforms to the Open Source Definition (Version 1.9)
-# published by the Open Source Initiative.
-
-# Please submit bugfixes or comments via http://bugs.opensuse.org/
-#
-
-
-Name:           hello
-Version:        
-Release:        0
-Summary:
-# FIXME: Select a correct license from https://github.com/openSUSE/spec-cleaner#spdx-licenses
-License:        
-# FIXME: use correct group, see "https://en.opensuse.org/openSUSE:Package_group_guidelines"
-Group:          
-Url:            
-Source:         
-BuildRequires:  
-BuildRoot:      %{_tmppath}/%{name}-%{version}-build
+Name:     hello
+Version:  2.10
+Release:  1
+Summary:  The "Hello World" program from GNU
+License:  GPLv3+
+URL:      https://www.gnu.org/software/hello/
+Source0:  https://ftp.gnu.org/gnu/hello/hello-%{version}.tar.gz
 
 %description
-
-%prep
-%setup -q
-
-%build
-%configure
-make %{?_smp_mflags}
-
-%install
-%make_install
-
-%post
-%postun
-
-%files
-%defattr(-,root,root)
-%doc ChangeLog README COPYING
+The "Hello World" program, done with all bells and whistles of a proper FOSS
+project, including configuration, build, internationalization, help files, etc.
 
 %changelog
-
+* Thu Jul 07 2011 The Coon of Ty <Ty@coon.org> - 2.10-1
+- Initial version of the package
