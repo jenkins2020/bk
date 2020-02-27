@@ -5,7 +5,8 @@ pipeline {
     stages {
         stage('Setup') {
             steps {
-                sh('echo $HOME')
+                sh('rpmdev-setuptree')
+                sh('test -d ~/rpmbuild/SOURCES || echo 404')
             }
         }
 
