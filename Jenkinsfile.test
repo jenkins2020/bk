@@ -8,7 +8,7 @@ pipeline {
                 agent {
                     dockerfile {
                         additionalBuildArgs "--build-arg version=${PLATFORM}"
-                        
+                        args  "--user 0:0" 
                     }
                 }
                 axes {
