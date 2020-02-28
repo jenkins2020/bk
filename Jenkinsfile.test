@@ -1,0 +1,36 @@
+#!/bin/groovy
+
+pipeline {
+    stages {
+        stage('Matrix') {
+            matrix {
+                agent {
+                    docker {
+                        image "${PLATFORM}"
+                        args '-u 0'
+                    }
+                }
+                axes {
+                    axis {
+                        name 'PLATFORM'
+                        values 'fedora:29', 'fedora:30', 'fedora:31'
+                    }
+                }
+                stages {
+                    stage('INIT') {
+                        steps {
+                            copyArtifacts(projectName: 'bk_build')
+                            sh('ls')
+                        }
+                    }
+                    stage('Test') {
+                        steps {
+                            sh('dnf install -y hello-[^d]*rpm')
+                            sh('hello')
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
