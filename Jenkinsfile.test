@@ -1,31 +1,45 @@
 #!/bin/groovy
 
 pipeline {
+    agent any
     stages {
         stage('Matrix') {
             matrix {
                 agent {
-                    docker {
-                        image "${PLATFORM}"
-                        args '-u 0'
+                    dockerfile {
+                        additionalBuildArgs "--build-arg version=${PLATFORM}"
                     }
                 }
                 axes {
                     axis {
                         name 'PLATFORM'
-                        values 'fedora:29', 'fedora:30', 'fedora:31'
+                        values '29', '30', '31'
                     }
                 }
                 stages {
-                    stage('INIT') {
+                    stage('INIT build') {
                         steps {
-                            copyArtifacts(projectName: 'bk_build')
-                            sh('ls')
+                            sh('rpmdev-setuptree')
+                            sh('cd ~/rpmbuild/SOURCES; wget -c http://ftp.gnu.org/gnu/hello/hello-2.10.tar.gz')
+                            sh('cd ~/rpmbuild/SPECS; rpmdev-newspec hello')
+                        }
+                    }
+                    stage('Build') {
+                        steps {
+                            sh('cp hello.spec ~/rpmbuild/SPECS')
+                            sh('cd ~/rpmbuild/SPECS; rpmbuild -ba hello.spec')
+                            sh('cp ~/rpmbuild/RPMS/*/*.rpm .')
+                        }
+                    }
+                    stage('Export artifactory') {
+                        steps {
+                            archiveArtifacts(artifacts: '*.rpm')
                         }
                     }
                     stage('Test') {
                         steps {
-                            sh('dnf install -y hello-[^d]*rpm')
+                            sh('ls')
+                            sh('sudo dnf install -y hello-[^d]*fc${PLATFORM}*rpm')
                             sh('hello')
                         }
                     }
