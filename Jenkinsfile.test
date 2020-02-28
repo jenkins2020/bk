@@ -40,7 +40,7 @@ pipeline {
                     stage('Test') {
                         steps {
                             sh('ls')
-                            sh('dnf install -y hello-.*fc${PLATFORM}*rpm')
+                            sh('dnf install -y hello-*.*fc${PLATFORM}*rpm')
                             sh('hello')
                         }
                     }
